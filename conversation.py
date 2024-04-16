@@ -18,12 +18,6 @@ memory = ConversationBufferMemory(
     return_messages=True
 )
 
-# template = """你是一個友善的學習助理，你接下來會跟使用者來對話。
-# {tools}
-
-# User: {input}
-# {agent_scratchpad}"""
-
 prompt = ChatPromptTemplate(
     messages=[
         SystemMessagePromptTemplate.from_template(
