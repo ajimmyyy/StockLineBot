@@ -18,13 +18,26 @@ memory = ConversationBufferMemory(
     return_messages=True
 )
 
+# template = """你是一個友善的學習助理，你接下來會跟使用者來對話。
+# {tools}
+
+# User: {input}
+# {agent_scratchpad}"""
+
 prompt = ChatPromptTemplate(
     messages=[
         SystemMessagePromptTemplate.from_template(
-            "你是一個友善的學習助理，你接下來會跟使用者來對話。"
+            """
+            你是一個友善的學習助理，你接下來會透過中文跟使用者來對話，並使用工具解決問題。
+            """
         ),
         MessagesPlaceholder(variable_name="chat_history"),
-        HumanMessagePromptTemplate.from_template("{question}")
+        HumanMessagePromptTemplate.from_template(
+            """
+            使用者: {input}
+            {agent_scratchpad}
+            """
+        )
     ]
 )
 
