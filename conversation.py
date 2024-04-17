@@ -8,9 +8,13 @@ from langchain.agents import (
     AgentExecutor
 )
 from langchain_openai import ChatOpenAI
+from tools.stock_price import StockPriceTool
 
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+
 tools = load_tools(["serpapi", "llm-math"], llm=llm)
+custom_tools = [StockPriceTool()]
+tools.extend(custom_tools)
 
 memory = ConversationBufferMemory(
     memory_key="chat_history",
