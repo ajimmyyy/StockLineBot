@@ -8,6 +8,7 @@ class StockPriceCheckInput(BaseModel):
 
     stock_ticker: str = Field(...,
                              description="Ticker symbol for stock or index")
+    period: str = Field('1d', description="Period for stock price check, default is 1d, can be 1d, 1mo")
 
 class StockPriceTool(BaseTool):
     name = "get_stock_ticker_price"
@@ -16,9 +17,9 @@ class StockPriceTool(BaseTool):
         "You should input the stock ticker used on the yfinance API"
     )
 
-    def _run(self, stock_ticker: str):
-        price = get_stock_price(stock_ticker)
-        return f"The price of {stock_ticker} is {price}"
+    def _run(self, stock_ticker: str, period: str = '1d'):
+        data = get_stock_price(stock_ticker, period)
+        return data
         
     def _arun(self, radius: int):
         raise NotImplementedError("This tool does not support async")

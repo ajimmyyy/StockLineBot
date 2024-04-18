@@ -1,4 +1,3 @@
-from langchain import hub
 from langchain.memory import ConversationBufferMemory
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.prompts import SystemMessagePromptTemplate, HumanMessagePromptTemplate
