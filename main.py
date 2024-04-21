@@ -29,6 +29,10 @@ configuration = Configuration(access_token=channel_access_token)
 parser = WebhookParser(channel_secret)
 line_bot_api = MessagingApi(ApiClient(configuration))
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
 @app.post("/callback")
 async def callback(request: Request):
     signature = request.headers['X-Line-Signature']
