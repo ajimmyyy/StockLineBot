@@ -17,8 +17,10 @@ jobs:
     - id: 'auth'
       uses: google-github-actions/auth@v2
       with:
-        workload_identity_provider: 'projects/7126552240/locations/global/workloadIdentityPools/gcfun-deploy-pools/providers/gcfun-deploy-provider'
-        service_account: 'gcfun-deploy@pivotal-crawler-420713.iam.gserviceaccount.com'
+        # 'projects/7126552240/locations/global/workloadIdentityPools/gcfun-deploy-pools/providers/gcfun-deploy-provider'
+        workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+        # 'gcfun-deploy@pivotal-crawler-420713.iam.gserviceaccount.com'
+        service_account: '${{ secrets.SA_EMAIL }}'
     # https://github.com/google-github-actions/setup-gcloud
     # https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
     - name: 設定 Google Cloud SDK
