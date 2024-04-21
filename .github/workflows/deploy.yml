@@ -38,7 +38,7 @@ jobs:
         --allow-unauthenticated
         --entry-point=handler
         --env-vars-file=.env.yaml
-        --gen1
+        --gen2
         --max-instances=5
         --memory=256Mi
         --no-user-output-enabled
