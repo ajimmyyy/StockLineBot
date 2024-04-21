@@ -1,0 +1,48 @@
+name: Cloud Functions Deploy
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v3
+    - id: 'auth'
+      uses: google-github-actions/auth@v0
+      with:
+        workload_identity_provider: 'projects/7126552240/locations/global/workloadIdentityPools/gcf-deploy-pools/providers/gcf-deploy-provider'
+        service_account: 'gcf-deploy@pivotal-crawler-420713.iam.gserviceaccount.com'
+    # https://github.com/google-github-actions/setup-gcloud
+    # https://github.com/google-github-actions/auth#setting-up-workload-identity-federation
+    - name: 設定 Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+    - name: 建立 GCF 環境變數檔案
+      shell: bash
+      run: |
+        [[ -z "$ENV_PROD" ]] || echo "$ENV_PROD" > .env.yaml
+        echo "GITHUB_SHA: ${GITHUB_SHA}" >> .env.yaml
+      env:
+        ENV_PROD: ${{ secrets.ENV_PROD }}
+    # https://cloud.google.com/functions/docs/deploy
+    # 請在這個網頁查看自動佈署的參數說明
+    - name: 部署到 Google Cloud Functions
+      run: >-
+        gcloud functions deploy "StockLineBot"
+        --allow-unauthenticated
+        --entry-point=handler
+        --env-vars-file=.env.yaml
+        --gen1
+        --max-instances=5
+        --memory=256Mi
+        --no-user-output-enabled
+        --region=asia-east1
+        --runtime=python39
+        --timeout=60s
+        --trigger-http

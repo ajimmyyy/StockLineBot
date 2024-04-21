@@ -1,6 +1,6 @@
 import os
 from agraffe import Agraffe
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from linebot.v3 import (
     WebhookParser
 )
@@ -18,6 +18,7 @@ from linebot.v3.webhooks import (
     MessageEvent,
     TextMessageContent
 )
+import json
 
 from conversation import generate_reply
 
@@ -54,7 +55,12 @@ async def callback(request: Request):
                 )
             )
     except InvalidSignatureError:
-        return HTTPException(status_code=400, detail='Invalid signature. Please check your channel access token/channel secret.')
-    return 'OK'
-
+        return json.dumps({
+            "severity": "ERROR",
+            "message": "Invalid signature error occurred."
+        })
+    return json.dumps({
+        "severity": "INFO",
+        "message": "OK"
+    })
 handler = Agraffe.entry_point(app)
